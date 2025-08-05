@@ -180,6 +180,59 @@
       );
     };
 
+    function useCalculator() {
+      const [operation, setOperation] = React.useState("");
+      const [result, setResult] = React.useState("");
+
+      const { updateHistory } = React.useContext(CalculatorContext);
+
+      function doOperation(input) {
+        if (input === "C") {
+          setOperation("");
+          setResult("");
+          return;
+        }
+
+        if (input === "CE") {
+          setResult("");
+          setOperation(operation.slice(0, -1));
+          return;
+        }
+
+        if (result) {
+          setOperation(isNaN(input)
+            ? `${result}${input}`
+            : input);
+          setResult("");
+          return;
+        }
+
+        if (input === "=") {
+          const operationResult = eval(operation.replace(/,/g, "."));
+          const parsedResult = operationResult.toString()?.replace(/\./g, ",");
+          
+          updateHistory(operation, parsedResult);
+          setResult(parsedResult);
+          return;
+        }
+
+        if (input === "," && !operation.endsWith(",")) {
+          setOperation(`${operation},`);
+          return;
+        }
+
+        setOperation(`
+          ${operation}${input}`
+        );
+      }
+
+      return {
+        operation,
+        result,
+        doOperation,
+      }
+    }
+
     function CalculatorDisplay({ operation, result }) {
       return (
         <div className={`
@@ -228,49 +281,10 @@
     }
 
     function Calculator() {
-      const [operation, setOperation] = React.useState("");
-      const [result, setResult] = React.useState("");
-
-      const { updateHistory } = React.useContext(CalculatorContext);
+      const { operation, result, doOperation } = useCalculator();
 
       function handleInputClick(input) {
-        if (input === "C") {
-          setOperation("");
-          setResult("");
-          return;
-        }
-
-        if (input === "CE") {
-          setResult("");
-          setOperation(operation.slice(0, -1));
-          return;
-        }
-
-        if (result) {
-          setOperation(isNaN(input)
-            ? `${result}${input}`
-            : input);
-          setResult("");
-          return;
-        }
-
-        if (input === "=") {
-          const operationResult = eval(operation.replace(/,/g, "."));
-          const parsedResult = operationResult.toString()?.replace(/\./g, ",");
-          
-          updateHistory(operation, parsedResult);
-          setResult(parsedResult);
-          return;
-        }
-
-        if (input === "," && !operation.endsWith(",")) {
-          setOperation(`${operation},`);
-          return;
-        }
-
-        setOperation(`
-          ${operation}${input}`
-        );
+        doOperation(input);
       }
 
       return (
