@@ -165,7 +165,6 @@
       function updateHistory(operation, parsedResult) {
         setHistory((prev) => {
           const updatedHistory = [...prev, `${operation}=${parsedResult}`];
-          console.log(updatedHistory);
 
           localStorage.setItem(historyStorageKey, JSON.stringify(updatedHistory));
 
