@@ -15,7 +15,7 @@ Este projeto é uma **calculadora funcional** desenvolvida em **React.js**, com 
 
 ## 📸 Demonstração
 
-![Calculadora em funcionamento](./assets/screenshot.png) <!-- Altere o caminho se necessário -->
+![Tela da calculadora em funcionamento](image.png)
 
 ---
 
